@@ -39,12 +39,14 @@
             border-radius: 8px;
             border: 3px solid #ff4655;
         }
-        #video-container iframe {
+        /* Garante que o iframe e a imagem (Kratos) preencham o contêiner */
+        #video-container iframe, #video-container img {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
         #question {
             font-size: 1.5em;
@@ -89,6 +91,18 @@
             font-size: 1.1em;
             display: none;
         }
+        /* Novo estilo para o botão de reinício */
+        #restart-button {
+            background-color: #4a4a4a;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -109,16 +123,16 @@
         <div id="feedback"></div>
         
         <button id="next-button" onclick="loadNextClip()">Próximo Clipe</button>
+        <button id="restart-button" onclick="restartQuiz()">Jogar Novamente</button>
     </div>
 
     <script>
         // FUNÇÃO DE EMBED: Cria o link de incorporação do YouTube
         function getYoutubeEmbedLink(videoId) {
-            // Inclui 'autoplay=1' e 'modestbranding=1'
             return `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1&modestbranding=1`;
         }
         
-        // 🚨 DADOS ATUALIZADOS PARA 4 CLIPES 🚨
+        // DADOS DOS CLIPES
         const clips = [
             { id: 1, youtubeId: 'K_bkQbV0JIo', owner: 'Samuel' }, 
             { id: 2, youtubeId: 'PW1XGPS2zwU', owner: 'Vitoria' },
@@ -133,16 +147,21 @@
         const questionElement = document.getElementById('question');
         const feedbackElement = document.getElementById('feedback');
         const nextButton = document.getElementById('next-button');
+        const restartButton = document.getElementById('restart-button');
+        const optionsDiv = document.querySelector('.options');
         const optionButtons = document.querySelectorAll('.options button');
 
         function loadClip(index) {
             isAnswered = false;
             feedbackElement.textContent = '';
             nextButton.style.display = 'none';
+            restartButton.style.display = 'none'; // Esconde o botão de reiniciar
+            optionsDiv.style.display = 'block'; // Mostra os botões de opção
 
             // Habilita e reseta os botões
             optionButtons.forEach(button => {
                 button.disabled = false;
+                button.style.display = 'inline-block';
                 button.style.backgroundColor = '#4a4a4a';
             });
             
@@ -175,9 +194,6 @@
             }
 
             questionElement.textContent = customQuestion;
-            // Atualiza o texto do botão "Próximo Clipe" se for o último
-            nextButton.textContent = (index === clips.length - 1) ? 'Recomeçar Quiz' : 'Próximo Clipe';
-
         }
 
         function checkAnswer(selectedOwner) {
@@ -186,7 +202,6 @@
             isAnswered = true;
             const currentClip = clips[currentClipIndex];
             const correctOwner = currentClip.owner;
-            let feedbackText = '';
             
             // Desabilita os botões e indica a resposta correta/incorreta
             optionButtons.forEach(button => {
@@ -198,33 +213,31 @@
                 }
             });
 
-            
             // LÓGICA DE FEEDBACK ALTAMENTE PERSONALIZADO
+            let feedbackText = '';
             if (selectedOwner === correctOwner) {
-                // RESPOSTA CORRETA
                 feedbackElement.className = 'correct';
                 
-                if (currentClipIndex === 0) { // Clipe 1 (Samuel)
+                if (currentClipIndex === 0) {
                     feedbackText = 'voce nao faz isso ne, que pena 😥';
-                } else if (currentClipIndex === 1) { // Clipe 2 (Vitoria)
+                } else if (currentClipIndex === 1) {
                     feedbackText = 'so voce pra ter essa sorte ai né 🤷';
-                } else if (currentClipIndex === 2) { // Clipe 3 (Samuel)
+                } else if (currentClipIndex === 2) {
                     feedbackText = 'cosplay de vitoria hehe';
-                } else if (currentClipIndex === 3) { // Clipe 4 (Vitoria)
+                } else if (currentClipIndex === 3) {
                     feedbackText = 'tem algo a dizer? Parabéns';
                 }
                 
             } else {
-                // RESPOSTA INCORRETA
                 feedbackElement.className = 'incorrect';
                 
-                if (currentClipIndex === 0) { // Clipe 1 (Samuel, Resposta: Vitoria)
+                if (currentClipIndex === 0) {
                     feedbackText = 'Você acha que você joga bem assim? Bobinha. 😉!';
-                } else if (currentClipIndex === 1) { // Clipe 2 (Vitoria, Resposta: Samuel)
+                } else if (currentClipIndex === 1) {
                     feedbackText = 'Eu não tenho esse move dura ai não, Deus o livre 🙄';
-                } else if (currentClipIndex === 2) { // Clipe 3 (Samuel, Resposta: Vitoria)
+                } else if (currentClipIndex === 2) {
                     feedbackText = 'eu sei que parece com voce mas... não';
-                } else if (currentClipIndex === 3) { // Clipe 4 (Vitoria, Resposta: Samuel)
+                } else if (currentClipIndex === 3) {
                     feedbackText = 'é uma falta de respeito voce me comparar a isso 😥';
                 }
             }
@@ -234,6 +247,7 @@
 
             // Mostra o botão Próximo
             nextButton.style.display = 'block';
+            nextButton.textContent = (currentClipIndex === clips.length - 1) ? 'Ver Final' : 'Próximo Clipe';
         }
 
         function loadNextClip() {
@@ -242,12 +256,27 @@
                 // Se ainda há clipes, carrega o próximo
                 loadClip(currentClipIndex);
             } else {
-                // Reinicia o quiz
-                currentClipIndex = 0; 
-                loadClip(currentClipIndex); 
-                feedbackElement.className = ''; 
-                feedbackElement.textContent = 'Quiz reiniciado! Jogue de novo.';
+                // ⭐ TELA FINAL: Kratos ⭐
+                
+                // Mensagem final
+                videoContainer.innerHTML = `<img src="kratos.gif" alt="Kratos, o homem lindo." />`;
+                questionElement.textContent = 'Obrigado, voce perdeu alguns minutos de vida pra ver isso, agora aprecie esse homem lindo.';
+                feedbackElement.textContent = 'FIM DO QUIZ.';
+                feedbackElement.className = '';
+
+                // Esconde botões de opção e o botão "Próximo"
+                optionsDiv.style.display = 'none';
+                nextButton.style.display = 'none';
+                
+                // Mostra o botão de reiniciar
+                restartButton.style.display = 'block';
             }
+        }
+        
+        // Função para reiniciar o quiz
+        function restartQuiz() {
+            currentClipIndex = 0; 
+            loadClip(currentClipIndex);
         }
 
         // Inicia o quiz ao carregar a página
