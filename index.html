@@ -38,7 +38,6 @@
             border-radius: 8px;
             border: 3px solid #ff4655;
         }
-        /* Ajuste Crucial: object-fit: contain para evitar corte do GIF */
         #video-container iframe, #video-container img {
             position: absolute;
             top: 0;
@@ -121,7 +120,7 @@
         <div id="feedback"></div>
         
         <button id="next-button" onclick="loadNextClip()">Próximo Clipe</button>
-        <button id="restart-button" onclick="restartQuiz()">Tentar de novo</button>
+        <button id="restart-button" onclick="restartQuiz()">Tentar de Novo</button>
     </div>
 
     <script>
@@ -129,7 +128,6 @@
             return `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1&modestbranding=1`;
         }
         
-        // Dados dos 4 clipes (IDs do último código fornecido)
         const clips = [
             { id: 1, youtubeId: 'K_bkQbV0JIo', owner: 'Samuel' }, 
             { id: 2, youtubeId: 'PW1XGPS2zwU', owner: 'Vitoria' },
@@ -163,7 +161,6 @@
             
             const clip = clips[index];
             
-            // 1. Carrega o Vídeo do YOUTUBE
             videoContainer.innerHTML = `
                 <iframe 
                     src="${getYoutubeEmbedLink(clip.youtubeId)}"
@@ -175,7 +172,6 @@
                 </iframe>
             `;
             
-            // 2. Define a Pergunta PERSONALIZADA
             let customQuestion = '';
             if (index === 0) {
                 customQuestion = 'quem é que jogou muito aqui';
@@ -206,7 +202,6 @@
                 }
             });
 
-            // LÓGICA DE FEEDBACK ALTAMENTE PERSONALIZADO
             let feedbackText = '';
             if (selectedOwner === correctOwner) {
                 feedbackElement.className = 'correct';
@@ -245,12 +240,16 @@
             if (currentClipIndex < clips.length) {
                 loadClip(currentClipIndex);
             } else {
-                // TELA FINAL: Kratos (Usando o nome do arquivo de alta qualidade)
-                // Certifique-se de que o nome do arquivo no seu GitHub está EXATAMENTE assim.
+                // TELA FINAL: Kratos
                 const kratosGifName = 'God Of War Ps4 GIF by PlayStation.gif';
                 
                 videoContainer.innerHTML = `<img src="${kratosGifName}" alt="Kratos, o homem lindo." />`;
-                questionElement.textContent = ' Voce perdeu alguns minutos de vida pra ver isso, agora aprecie esse homem lindo.';
+                
+                // Mensagem final solicitada
+                questionElement.textContent = 'Voce perdeu alguns minutos de vida pra ver isso, agora aprecie esse homem lindo.';
+                
+                // Removido o 'FIM DO QUIZ.' (deixado vazio)
+                feedbackElement.textContent = ''; 
                 feedbackElement.className = '';
 
                 optionsDiv.style.display = 'none';
