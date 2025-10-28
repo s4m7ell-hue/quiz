@@ -25,13 +25,13 @@
             max-width: 800px;
             text-align: center;
         }
+        /* Título Principal Alterado */
         h1 {
             color: #ff4655;
             margin-bottom: 20px;
         }
         #video-container {
             margin-bottom: 20px;
-            /* Usamos padding-bottom para tornar o player responsivo */
             position: relative;
             padding-bottom: 56.25%; /* Proporção 16:9 */
             height: 0;
@@ -112,33 +112,18 @@
     </div>
 
     <script>
-        // ⭐ FUNÇÃO ATUALIZADA: Cria o link de incorporação do YouTube
-        // Inclui 'autoplay=1' para tentar iniciar (ou pelo menos mostrar o player) e 'modestbranding=1' para um player mais limpo
+        // FUNÇÃO DE EMBED: Cria o link de incorporação do YouTube
         function getYoutubeEmbedLink(videoId) {
+            // Inclui 'autoplay=1' e 'modestbranding=1'
             return `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1&modestbranding=1`;
         }
         
-        // 🚨 PASSO 1: DADOS ATUALIZADOS PARA YOUTUBE 🚨
+        // 🚨 DADOS ATUALIZADOS PARA 4 CLIPES 🚨
         const clips = [
-            {
-                id: 1,
-                // ID do vídeo: sAhngtzL4nQ (https://youtu.be/sAhngtzL4nQ)
-                youtubeId: 'sAhngtzL4nQ', 
-                owner: 'Samuel' 
-            },
-            {
-                id: 2,
-                // ID do vídeo: SIs2dCjo4EY (https://youtu.be/SIs2dCjo4EY)
-                youtubeId: 'SIs2dCjo4EY', 
-                owner: 'Vitoria' 
-            },
-            {
-                id: 3,
-                // ID do vídeo: A42L_M_GpWA (https://youtu.be/A42L_M_GpWA)
-                youtubeId: 'A42L_M_GpWA', 
-                owner: 'Samuel' 
-            }
-            // Adicione mais objetos {id, youtubeId, owner} se tiver mais clipes!
+            { id: 1, youtubeId: 'sAhngtzL4nQ', owner: 'Samuel' }, 
+            { id: 2, youtubeId: 'SIs2dCjo4EY', owner: 'Vitoria' },
+            { id: 3, youtubeId: 'A42L_M_GpWA', owner: 'Samuel' },
+            { id: 4, youtubeId: '1a4TMQjPXcs', owner: 'Vitoria' } 
         ];
         
         let currentClipIndex = 0;
@@ -175,8 +160,21 @@
                 </iframe>
             `;
             
-            // 2. Define a Pergunta
-            questionElement.textContent = `Clipe #${index + 1}: de quem é essa porquisse?`;
+            // 2. Define a Pergunta PERSONALIZADA
+            let customQuestion = '';
+            if (index === 0) {
+                customQuestion = 'quem é que jogou muito aqui';
+            } else if (index === 1) {
+                customQuestion = 'quem cagou aqui?';
+            } else if (index === 2) {
+                customQuestion = 'quem é o melhor omem do Brasil?kkk';
+            } else if (index === 3) {
+                customQuestion = 'nossa tenho nem oq dizer sobre essa play so responde ai 🥴';
+            } else {
+                customQuestion = `Clipe #${index + 1}: De quem é essa jogada?`; // Fallback
+            }
+
+            questionElement.textContent = customQuestion;
             // Atualiza o texto do botão "Próximo Clipe" se for o último
             nextButton.textContent = (index === clips.length - 1) ? 'Recomeçar Quiz' : 'Próximo Clipe';
 
@@ -200,28 +198,34 @@
                 }
             });
 
-            // LÓGICA DE FEEDBACK PERSONALIZADO (com Samuel e Vitoria)
+            
+            // LÓGICA DE FEEDBACK ALTAMENTE PERSONALIZADO
             if (selectedOwner === correctOwner) {
                 // RESPOSTA CORRETA
                 feedbackElement.className = 'correct';
                 
-                if (correctOwner === 'Samuel') {
-                    feedbackText = 'Realmente, para jogar bem assim tem que ser eu mesmo! 😄';
-                } else if (correctOwner === 'Vitoria') {
-                    feedbackText = 'Pra ter essa jogabilidade dura tinha que ser você, né 🤷';
+                if (currentClipIndex === 0) { // Clipe 1 (Samuel)
+                    feedbackText = 'voce nao faz isso ne, que pena 😥';
+                } else if (currentClipIndex === 1) { // Clipe 2 (Vitoria)
+                    feedbackText = 'so voce pra ter essa sorte ai né 🤷';
+                } else if (currentClipIndex === 2) { // Clipe 3 (Samuel)
+                    feedbackText = 'cosplay de vitoria hehe';
+                } else if (currentClipIndex === 3) { // Clipe 4 (Vitoria)
+                    feedbackText = 'tem algo a dizer? Parabéns';
                 }
                 
             } else {
                 // RESPOSTA INCORRETA
                 feedbackElement.className = 'incorrect';
                 
-                if (correctOwner === 'Samuel' && selectedOwner === 'Vitoria') {
+                if (currentClipIndex === 0) { // Clipe 1 (Samuel, Resposta: Vitoria)
                     feedbackText = 'Você acha que você joga bem assim? Bobinha. 😉!';
-                } else if (correctOwner === 'Vitoria' && selectedOwner === 'Samuel') {
-                    feedbackText = 'Eu não jogo mal assim, Deus o livre 🙄';
-                } else {
-                    // Fallback
-                    feedbackText = `Erro! A jogada correta era do(a) ${correctOwner}.`;
+                } else if (currentClipIndex === 1) { // Clipe 2 (Vitoria, Resposta: Samuel)
+                    feedbackText = 'Eu não tenho esse move dura ai não, Deus o livre 🙄';
+                } else if (currentClipIndex === 2) { // Clipe 3 (Samuel, Resposta: Vitoria)
+                    feedbackText = 'eu sei que parece com voce mas... não';
+                } else if (currentClipIndex === 3) { // Clipe 4 (Vitoria, Resposta: Samuel)
+                    feedbackText = 'é uma falta de respeito voce me comparar a isso 😥';
                 }
             }
 
@@ -238,10 +242,10 @@
                 // Se ainda há clipes, carrega o próximo
                 loadClip(currentClipIndex);
             } else {
-                // ⭐ ATUALIZADO AQUI: Reinicia o quiz ⭐
-                currentClipIndex = 0; // Volta para o primeiro clipe
-                loadClip(currentClipIndex); // Carrega o primeiro clipe novamente
-                feedbackElement.className = ''; // Limpa a cor do feedback
+                // Reinicia o quiz
+                currentClipIndex = 0; 
+                loadClip(currentClipIndex); 
+                feedbackElement.className = ''; 
                 feedbackElement.textContent = 'Quiz reiniciado! Jogue de novo.';
             }
         }
