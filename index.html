@@ -29,6 +29,10 @@
             color: #ff4655;
             margin-bottom: 20px;
         }
+        /* Estilo para esconder o título H1 na tela final */
+        h1.hidden {
+            display: none;
+        }
         #video-container {
             margin-bottom: 20px;
             position: relative;
@@ -105,7 +109,7 @@
 <body>
 
     <div class="container">
-        <h1>QUEM É O PODRE DE RUIM...</h1>
+        <h1 id="main-title">QUEM É O PODRE DE RUIM...</h1>
         
         <div id="video-container">
             </div>
@@ -138,6 +142,7 @@
         let currentClipIndex = 0;
         let isAnswered = false;
 
+        const mainTitle = document.getElementById('main-title'); // Novo: Referência ao título principal
         const videoContainer = document.getElementById('video-container');
         const questionElement = document.getElementById('question');
         const feedbackElement = document.getElementById('feedback');
@@ -152,6 +157,7 @@
             nextButton.style.display = 'none';
             restartButton.style.display = 'none';
             optionsDiv.style.display = 'block';
+            mainTitle.style.display = 'block'; // Garante que o título esteja visível nos clipes
 
             optionButtons.forEach(button => {
                 button.disabled = false;
@@ -248,10 +254,12 @@
                 // Mensagem final solicitada
                 questionElement.textContent = 'Voce perdeu alguns minutos de vida pra ver isso, agora aprecie esse homem lindo.';
                 
-                // Removido o 'FIM DO QUIZ.' (deixado vazio)
+                // Limpa o feedback para remover a mensagem indesejada
                 feedbackElement.textContent = ''; 
                 feedbackElement.className = '';
 
+                // Esconde o título principal na tela final
+                mainTitle.style.display = 'none'; 
                 optionsDiv.style.display = 'none';
                 nextButton.style.display = 'none';
                 
