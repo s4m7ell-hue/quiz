@@ -121,7 +121,7 @@
         <div id="feedback"></div>
         
         <button id="next-button" onclick="loadNextClip()">Próximo Clipe</button>
-        <button id="restart-button" onclick="restartQuiz()">Jogar Novamente</button>
+        <button id="restart-button" onclick="restartQuiz()">Tentar de novo</button>
     </div>
 
     <script>
@@ -250,8 +250,7 @@
                 const kratosGifName = 'God Of War Ps4 GIF by PlayStation.gif';
                 
                 videoContainer.innerHTML = `<img src="${kratosGifName}" alt="Kratos, o homem lindo." />`;
-                questionElement.textContent = 'Obrigado, voce perdeu alguns minutos de vida pra ver isso, agora aprecie esse homem lindo.';
-                feedbackElement.textContent = 'FIM DO QUIZ.';
+                questionElement.textContent = ' Voce perdeu alguns minutos de vida pra ver isso, agora aprecie esse homem lindo.';
                 feedbackElement.className = '';
 
                 optionsDiv.style.display = 'none';
