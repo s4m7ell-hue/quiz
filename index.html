@@ -113,28 +113,28 @@
 
     <script>
         // Função para criar o link de incorporação do Google Drive
-        // Usamos o formato que o próprio Drive gerou para garantir que funciona!
+        // Esta versão é alternativa e recomendada para incorporação de vídeos do Drive.
         function getDriveEmbedLink(driveId) {
-            return `https://drive.google.com/file/d/${driveId}/preview`;
+            return `https://drive.google.com/file/d/${driveId}/view?usp=drivesdk`;
         }
         
-        // 🚨 SEUS DADOS ATUALIZADOS! 🚨
+        // 🚨 PASSO 1: COLOQUE SEUS DADOS AQUI! 🚨
         const clips = [
             {
                 id: 1,
-                // CLIPE #1: Samuel (ID verificado e funcional)
+                // ID do clipe 1 (Samuel) - ID fornecido:
                 driveId: '1vBCCpjwusIScrGJF84z1-0cAThle2-jN', 
                 owner: 'Samuel' 
             },
             {
                 id: 2,
-                // CLIPE #2: Vitoria (ID verificado e funcional)
+                // ⚠️ AQUI VOCÊ DEVE PREENCHER COM O ID DO SEGUNDO CLIPE
                 driveId: '1OKSZ-Oy-ayphdYK3QOnnT2DLHZdOYPY3', 
                 owner: 'Vitoria' 
             },
             {
                 id: 3,
-                // ⚠️ PARA UMA TERCEIRA RODADA, COLOQUE O ID AQUI!
+                // ⚠️ AQUI VOCÊ DEVE PREENCHER COM O ID DO TERCEIRO CLIPE
                 driveId: 'COLOQUE_O_ID_DO_CLIPE_3_AQUI', 
                 owner: 'Samuel' 
             }
@@ -231,6 +231,7 @@
             }
         }
 
+        // Inicia o quiz ao carregar a página
         loadClip(currentClipIndex);
     </script>
     </body>
