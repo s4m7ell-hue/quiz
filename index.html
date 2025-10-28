@@ -31,7 +31,7 @@
         }
         #video-container {
             margin-bottom: 20px;
-            /* Garante que o iframe seja responsivo */
+            /* Usamos padding-bottom para tornar o player responsivo */
             position: relative;
             padding-bottom: 56.25%; /* Proporção 16:9 */
             height: 0;
@@ -113,31 +113,31 @@
 
     <script>
         // Função para criar o link de incorporação do Google Drive
-        // Esta versão é alternativa e recomendada para incorporação de vídeos do Drive.
         function getDriveEmbedLink(driveId) {
-            return `https://drive.google.com/file/d/${driveId}/view?usp=drivesdk`;
+            return `https://drive.google.com/file/d/${driveId}/preview`;
         }
         
         // 🚨 PASSO 1: COLOQUE SEUS DADOS AQUI! 🚨
         const clips = [
             {
                 id: 1,
-                // ID do clipe 1 (Samuel) - ID fornecido:
+                // O SEU ID DO GOOGLE DRIVE ESTÁ AQUI (CORRIGIDO)
                 driveId: '1vBCCpjwusIScrGJF84z1-0cAThle2-jN', 
-                owner: 'Samuel' 
+                owner: 'Samuel' // Quem fez a jogada
             },
             {
                 id: 2,
-                // ⚠️ AQUI VOCÊ DEVE PREENCHER COM O ID DO SEGUNDO CLIPE
-                driveId: '', 
-                owner: 'Vitoria' 
+                // VOCÊ DEVE SUBSTITUIR POR OUTRO ID DO GOOGLE DRIVE AQUI
+                driveId: '1RUaKG8EcRDyVvfv0A1xcoJzpQRXV1JsB', 
+                owner: 'Vitoria' // Quem fez a jogada
             },
             {
                 id: 3,
-                // ⚠️ AQUI VOCÊ DEVE PREENCHER COM O ID DO TERCEIRO CLIPE
+                // VOCÊ DEVE SUBSTITUIR POR OUTRO ID DO GOOGLE DRIVE AQUI
                 driveId: 'COLOQUE_O_ID_DO_CLIPE_3_AQUI', 
-                owner: 'Samuel' 
+                owner: 'Samuel' // Quem fez a jogada
             }
+            // Adicione mais objetos {id, driveId, owner} se tiver mais clipes!
         ];
         
         let currentClipIndex = 0;
@@ -154,6 +154,7 @@
             feedbackElement.textContent = '';
             nextButton.style.display = 'none';
 
+            // Habilita e reseta os botões
             optionButtons.forEach(button => {
                 button.disabled = false;
                 button.style.backgroundColor = '#4a4a4a';
@@ -161,7 +162,7 @@
             
             const clip = clips[index];
             
-            // Carrega o Vídeo do GOOGLE DRIVE
+            // 1. Carrega o Vídeo do GOOGLE DRIVE usando a função getDriveEmbedLink
             videoContainer.innerHTML = `
                 <iframe 
                     src="${getDriveEmbedLink(clip.driveId)}"
@@ -172,6 +173,7 @@
                 </iframe>
             `;
             
+            // 2. Define a Pergunta
             questionElement.textContent = `Clipe #${index + 1}: De quem é essa jogada?`;
         }
 
@@ -183,17 +185,19 @@
             const correctOwner = currentClip.owner;
             let feedbackText = '';
             
+            // Desabilita os botões e indica a resposta correta/incorreta
             optionButtons.forEach(button => {
                 button.disabled = true;
                 if (button.textContent === correctOwner) {
-                    button.style.backgroundColor = '#4CAF50';
+                    button.style.backgroundColor = '#4CAF50'; // Marca o correto em verde
                 } else if (button.textContent === selectedOwner) {
-                     button.style.backgroundColor = '#f44336';
+                     button.style.backgroundColor = '#f44336'; // Marca o errado em vermelho
                 }
             });
 
-            // LÓGICA DE FEEDBACK PERSONALIZADO
+            // LÓGICA DE FEEDBACK PERSONALIZADO (com Samuel e Vitoria)
             if (selectedOwner === correctOwner) {
+                // RESPOSTA CORRETA
                 feedbackElement.className = 'correct';
                 
                 if (correctOwner === 'Samuel') {
@@ -203,6 +207,7 @@
                 }
                 
             } else {
+                // RESPOSTA INCORRETA
                 feedbackElement.className = 'incorrect';
                 
                 if (correctOwner === 'Samuel' && selectedOwner === 'Vitoria') {
@@ -210,11 +215,15 @@
                 } else if (correctOwner === 'Vitoria' && selectedOwner === 'Samuel') {
                     feedbackText = 'Eu não jogo mal assim, Deus o livre 🙄';
                 } else {
+                    // Fallback
                     feedbackText = `Erro! A jogada correta era do(a) ${correctOwner}.`;
                 }
             }
 
+            // Mostra o Feedback
             feedbackElement.textContent = feedbackText;
+
+            // Mostra o botão Próximo
             nextButton.style.display = 'block';
         }
 
@@ -223,6 +232,7 @@
             if (currentClipIndex < clips.length) {
                 loadClip(currentClipIndex);
             } else {
+                // Fim do Quiz
                 videoContainer.innerHTML = '<h2>Parabéns! Quiz Finalizado.</h2>';
                 questionElement.textContent = 'Recarregue a página (F5) para jogar novamente.';
                 feedbackElement.textContent = '';
