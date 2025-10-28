@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Clipes de Valorant</title>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #2c2c2c;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+        h1 {
+            color: #ff4655;
+            margin-bottom: 20px;
+        }
+        #video-container {
+            margin-bottom: 20px;
+            /* Usamos padding-bottom para tornar o player responsivo */
+            position: relative;
+            padding-bottom: 56.25%; /* Proporção 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 3px solid #ff4655;
+        }
+        #video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #question {
+            font-size: 1.5em;
+            margin-bottom: 25px;
+        }
+        .options button {
+            background-color: #4a4a4a;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.1s;
+            width: 45%;
+        }
+        .options button:hover {
+            background-color: #6a6a6a;
+            transform: scale(1.02);
+        }
+        #feedback {
+            margin-top: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 30px;
+        }
+        .correct {
+            color: #4CAF50;
+        }
+        .incorrect {
+            color: #f44336;
+        }
+        #next-button {
+            background-color: #ff4655;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            display: none;
+        }
+    </style>
+    </head>
+<body>
+
+    <div class="container">
+        <h1>De Quem é Essa Play?</h1>
+        
+        <div id="video-container">
+            </div>
+        
+        <div id="question"></div>
+        
+        <div class="options">
+            <button onclick="checkAnswer('Samuel')">Samuel</button>
+            <button onclick="checkAnswer('Vitoria')">Vitoria</button>
+        </div>
+        
+        <div id="feedback"></div>
+        
+        <button id="next-button" onclick="loadNextClip()">Próximo Clipe</button>
+    </div>
+
+    <script>
+        // Função para criar o link de incorporação do Google Drive
+        function getDriveEmbedLink(driveId) {
+            return `https://drive.google.com/file/d/${driveId}/preview`;
+        }
+        
+        // 🚨 PASSO 1: COLOQUE SEUS DADOS AQUI! 🚨
+        const clips = [
+            {
+                id: 1,
+                // O SEU ID DO GOOGLE DRIVE ESTÁ AQUI (CORRIGIDO)
+                driveId: '1vBCCpjwusIScrGJF84z1-0cAThle2-jN', 
+                owner: 'Samuel' // Quem fez a jogada
+            },
+            {
+                id: 2,
+                // VOCÊ DEVE SUBSTITUIR POR OUTRO ID DO GOOGLE DRIVE AQUI
+                driveId: 'COLOQUE_O_ID_DO_CLIPE_2_AQUI', 
+                owner: 'Vitoria' // Quem fez a jogada
+            },
+            {
+                id: 3,
+                // VOCÊ DEVE SUBSTITUIR POR OUTRO ID DO GOOGLE DRIVE AQUI
+                driveId: 'COLOQUE_O_ID_DO_CLIPE_3_AQUI', 
+                owner: 'Samuel' // Quem fez a jogada
+            }
+            // Adicione mais objetos {id, driveId, owner} se tiver mais clipes!
+        ];
+        
+        let currentClipIndex = 0;
+        let isAnswered = false;
+
+        const videoContainer = document.getElementById('video-container');
+        const questionElement = document.getElementById('question');
+        const feedbackElement = document.getElementById('feedback');
+        const nextButton = document.getElementById('next-button');
+        const optionButtons = document.querySelectorAll('.options button');
+
+        function loadClip(index) {
+            isAnswered = false;
+            feedbackElement.textContent = '';
+            nextButton.style.display = 'none';
+
+            // Habilita e reseta os botões
+            optionButtons.forEach(button => {
+                button.disabled = false;
+                button.style.backgroundColor = '#4a4a4a';
+            });
+            
+            const clip = clips[index];
+            
+            // 1. Carrega o Vídeo do GOOGLE DRIVE usando a função getDriveEmbedLink
+            videoContainer.innerHTML = `
+                <iframe 
+                    src="${getDriveEmbedLink(clip.driveId)}"
+                    width="100%"
+                    height="100%" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            
+            // 2. Define a Pergunta
+            questionElement.textContent = `Clipe #${index + 1}: De quem é essa jogada?`;
+        }
+
+        function checkAnswer(selectedOwner) {
+            if (isAnswered) return;
+            
+            isAnswered = true;
+            const currentClip = clips[currentClipIndex];
+            const correctOwner = currentClip.owner;
+            let feedbackText = '';
+            
+            // Desabilita os botões e indica a resposta correta/incorreta
+            optionButtons.forEach(button => {
+                button.disabled = true;
+                if (button.textContent === correctOwner) {
+                    button.style.backgroundColor = '#4CAF50'; // Marca o correto em verde
+                } else if (button.textContent === selectedOwner) {
+                     button.style.backgroundColor = '#f44336'; // Marca o errado em vermelho
+                }
+            });
+
+            // LÓGICA DE FEEDBACK PERSONALIZADO (com Samuel e Vitoria)
+            if (selectedOwner === correctOwner) {
+                // RESPOSTA CORRETA
+                feedbackElement.className = 'correct';
+                
+                if (correctOwner === 'Samuel') {
+                    feedbackText = 'Realmente, para jogar bem assim tem que ser eu mesmo! 😄';
+                } else if (correctOwner === 'Vitoria') {
+                    feedbackText = 'Pra ter essa jogabilidade dura tinha que ser você, né 🤷';
+                }
+                
+            } else {
+                // RESPOSTA INCORRETA
+                feedbackElement.className = 'incorrect';
+                
+                if (correctOwner === 'Samuel' && selectedOwner === 'Vitoria') {
+                    feedbackText = 'Você acha que você joga bem assim? Bobinha. 😉!';
+                } else if (correctOwner === 'Vitoria' && selectedOwner === 'Samuel') {
+                    feedbackText = 'Eu não jogo mal assim, Deus o livre 🙄';
+                } else {
+                    // Fallback
+                    feedbackText = `Erro! A jogada correta era do(a) ${correctOwner}.`;
+                }
+            }
+
+            // Mostra o Feedback
+            feedbackElement.textContent = feedbackText;
+
+            // Mostra o botão Próximo
+            nextButton.style.display = 'block';
+        }
+
+        function loadNextClip() {
+            currentClipIndex++;
+            if (currentClipIndex < clips.length) {
+                loadClip(currentClipIndex);
+            } else {
+                // Fim do Quiz
+                videoContainer.innerHTML = '<h2>Parabéns! Quiz Finalizado.</h2>';
+                questionElement.textContent = 'Recarregue a página (F5) para jogar novamente.';
+                feedbackElement.textContent = '';
+                nextButton.style.display = 'none';
+                optionButtons.forEach(button => button.style.display = 'none');
+            }
+        }
+
+        // Inicia o quiz ao carregar a página
+        loadClip(currentClipIndex);
+    </script>
+    </body>
+</html>
