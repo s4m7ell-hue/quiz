@@ -25,7 +25,6 @@
             max-width: 800px;
             text-align: center;
         }
-        /* Título Principal Alterado */
         h1 {
             color: #ff4655;
             margin-bottom: 20px;
@@ -39,14 +38,14 @@
             border-radius: 8px;
             border: 3px solid #ff4655;
         }
-        /* Garante que o iframe e a imagem (Kratos) preencham o contêiner */
+        /* Ajuste Crucial: object-fit: contain para evitar corte do GIF */
         #video-container iframe, #video-container img {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Garante que a imagem/GIF apareça totalmente */
         }
         #question {
             font-size: 1.5em;
@@ -91,7 +90,6 @@
             font-size: 1.1em;
             display: none;
         }
-        /* Novo estilo para o botão de reinício */
         #restart-button {
             background-color: #4a4a4a;
             color: white;
@@ -127,12 +125,11 @@
     </div>
 
     <script>
-        // FUNÇÃO DE EMBED: Cria o link de incorporação do YouTube
         function getYoutubeEmbedLink(videoId) {
             return `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1&modestbranding=1`;
         }
         
-        // DADOS DOS CLIPES
+        // Dados dos 4 clipes (IDs do último código fornecido)
         const clips = [
             { id: 1, youtubeId: 'K_bkQbV0JIo', owner: 'Samuel' }, 
             { id: 2, youtubeId: 'PW1XGPS2zwU', owner: 'Vitoria' },
@@ -155,10 +152,9 @@
             isAnswered = false;
             feedbackElement.textContent = '';
             nextButton.style.display = 'none';
-            restartButton.style.display = 'none'; // Esconde o botão de reiniciar
-            optionsDiv.style.display = 'block'; // Mostra os botões de opção
+            restartButton.style.display = 'none';
+            optionsDiv.style.display = 'block';
 
-            // Habilita e reseta os botões
             optionButtons.forEach(button => {
                 button.disabled = false;
                 button.style.display = 'inline-block';
@@ -189,8 +185,6 @@
                 customQuestion = 'quem é o melhor omem do Brasil?kkk esse clip é foda kkkkkk';
             } else if (index === 3) {
                 customQuestion = 'nossa tenho nem oq dizer sobre essa play so responde ai 🥴';
-            } else {
-                customQuestion = `Clipe #${index + 1}: De quem é essa jogada?`; // Fallback
             }
 
             questionElement.textContent = customQuestion;
@@ -203,13 +197,12 @@
             const currentClip = clips[currentClipIndex];
             const correctOwner = currentClip.owner;
             
-            // Desabilita os botões e indica a resposta correta/incorreta
             optionButtons.forEach(button => {
                 button.disabled = true;
                 if (button.textContent === correctOwner) {
-                    button.style.backgroundColor = '#4CAF50'; // Marca o correto em verde
+                    button.style.backgroundColor = '#4CAF50';
                 } else if (button.textContent === selectedOwner) {
-                     button.style.backgroundColor = '#f44336'; // Marca o errado em vermelho
+                     button.style.backgroundColor = '#f44336';
                 }
             });
 
@@ -242,10 +235,7 @@
                 }
             }
 
-            // Mostra o Feedback
             feedbackElement.textContent = feedbackText;
-
-            // Mostra o botão Próximo
             nextButton.style.display = 'block';
             nextButton.textContent = (currentClipIndex === clips.length - 1) ? 'Ver Final' : 'Próximo Clipe';
         }
@@ -253,33 +243,29 @@
         function loadNextClip() {
             currentClipIndex++;
             if (currentClipIndex < clips.length) {
-                // Se ainda há clipes, carrega o próximo
                 loadClip(currentClipIndex);
             } else {
-                // ⭐ TELA FINAL: Kratos ⭐
+                // TELA FINAL: Kratos (Usando o nome do arquivo de alta qualidade)
+                // Certifique-se de que o nome do arquivo no seu GitHub está EXATAMENTE assim.
+                const kratosGifName = 'God Of War Ps4 GIF by PlayStation.gif';
                 
-                // Mensagem final
-                videoContainer.innerHTML = `<img src="kratos.gif" alt="Kratos, o homem lindo." />`;
+                videoContainer.innerHTML = `<img src="${kratosGifName}" alt="Kratos, o homem lindo." />`;
                 questionElement.textContent = 'Obrigado, voce perdeu alguns minutos de vida pra ver isso, agora aprecie esse homem lindo.';
                 feedbackElement.textContent = 'FIM DO QUIZ.';
                 feedbackElement.className = '';
 
-                // Esconde botões de opção e o botão "Próximo"
                 optionsDiv.style.display = 'none';
                 nextButton.style.display = 'none';
                 
-                // Mostra o botão de reiniciar
                 restartButton.style.display = 'block';
             }
         }
         
-        // Função para reiniciar o quiz
         function restartQuiz() {
             currentClipIndex = 0; 
             loadClip(currentClipIndex);
         }
 
-        // Inicia o quiz ao carregar a página
         loadClip(currentClipIndex);
     </script>
 </body>
