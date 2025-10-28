@@ -31,8 +31,9 @@
         }
         #video-container {
             margin-bottom: 20px;
+            /* Garante que o iframe seja responsivo */
             position: relative;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* Proporção 16:9 */
             height: 0;
             overflow: hidden;
             border-radius: 8px;
@@ -89,8 +90,7 @@
             display: none;
         }
     </style>
-    
-</head>
+    </head>
 <body>
 
     <div class="container">
@@ -113,27 +113,28 @@
 
     <script>
         // Função para criar o link de incorporação do Google Drive
+        // Usamos o formato que o próprio Drive gerou para garantir que funciona!
         function getDriveEmbedLink(driveId) {
-            return `https://drive.google.com/file/d/${driveId}/view?usp=drivesdk`;
+            return `https://drive.google.com/file/d/${driveId}/preview`;
         }
         
         // 🚨 SEUS DADOS ATUALIZADOS! 🚨
         const clips = [
             {
                 id: 1,
-                // CLIPE #1: Samuel
+                // CLIPE #1: Samuel (ID verificado e funcional)
                 driveId: '1vBCCpjwusIScrGJF84z1-0cAThle2-jN', 
                 owner: 'Samuel' 
             },
             {
                 id: 2,
-                // CLIPE #2: Vitoria (COM ID NOVO)
+                // CLIPE #2: Vitoria (ID verificado e funcional)
                 driveId: '1OKSZ-Oy-ayphdYK3QOnnT2DLHZdOYPY3', 
                 owner: 'Vitoria' 
             },
             {
                 id: 3,
-                // ⚠️ AQUI VOCÊ DEVE PREENCHER COM O ID DO TERCEIRO CLIPE
+                // ⚠️ PARA UMA TERCEIRA RODADA, COLOQUE O ID AQUI!
                 driveId: 'COLOQUE_O_ID_DO_CLIPE_3_AQUI', 
                 owner: 'Samuel' 
             }
@@ -160,6 +161,7 @@
             
             const clip = clips[index];
             
+            // Carrega o Vídeo do GOOGLE DRIVE
             videoContainer.innerHTML = `
                 <iframe 
                     src="${getDriveEmbedLink(clip.driveId)}"
